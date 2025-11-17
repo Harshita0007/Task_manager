@@ -291,13 +291,35 @@ export default function DashboardPage() {
                                                                         <p className="text-sm font-semibold text-gray-800">
                                                                             {task.title}
                                                                         </p>
-                                                                        <button
-                                                                            onClick={() => handleEditTask(task)}
-                                                                            className="text-xs text-blue-600 hover:underline"
-                                                                        >
-                                                                            Edit
-                                                                        </button>
+
+                                                                        <div className="flex items-center gap-2">
+                                                                            <button
+                                                                                onClick={() => handleEditTask(task)}
+                                                                                className="text-xs text-blue-600 hover:underline"
+                                                                            >
+                                                                                Edit
+                                                                            </button>
+
+                                                                            <button
+                                                                                onClick={async () => {
+                                                                                    if (!confirm("Are you sure you want to delete this task?")) return;
+
+                                                                                    try {
+                                                                                        await taskService.deleteTask(task.id);
+                                                                                        toast.success("Task deleted");
+                                                                                        fetchTasks(); // refresh board + stats
+                                                                                    } catch (error) {
+                                                                                        console.error(error);
+                                                                                        toast.error("Failed to delete task");
+                                                                                    }
+                                                                                }}
+                                                                                className="text-xs text-red-600 hover:underline"
+                                                                            >
+                                                                                Delete
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
+
                                                                     {task.description && (
                                                                         <p className="text-xs text-gray-600 mb-3 line-clamp-3">
                                                                             {task.description}
